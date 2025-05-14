@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Player Movement</title>
+  <title>Player Movement with Idle Bobbing</title>
   <style>
     * {
       margin: 0;
@@ -25,9 +25,8 @@
       height: 50px;
       background: url('https://raw.githubusercontent.com/Asteria-Devs/SubjectWars/main/Player.png') no-repeat center;
       background-size: contain;
-      top: 50%;
-      left: 50%;
       transform: translate(-50%, -50%);
+      transition: transform 0.1s;
     }
   </style>
 </head>
@@ -38,6 +37,7 @@
 
   <script>
     const player = document.getElementById("player");
+
     let posX = window.innerWidth / 2;
     let posY = window.innerHeight / 2;
     const speed = 5;
@@ -48,6 +48,8 @@
       s: false,
       d: false,
     };
+
+    let bobbingTime = 0;
 
     window.addEventListener("keydown", (e) => {
       if (keys.hasOwnProperty(e.key.toLowerCase())) {
@@ -62,6 +64,8 @@
     });
 
     function movePlayer() {
+      let isMoving = keys.w || keys.a || keys.s || keys.d;
+
       if (keys.w) posY -= speed;
       if (keys.s) posY += speed;
       if (keys.a) posX -= speed;
@@ -71,8 +75,20 @@
       posX = Math.max(0, Math.min(window.innerWidth - 50, posX));
       posY = Math.max(0, Math.min(window.innerHeight - 50, posY));
 
+      // Set base position
       player.style.left = `${posX}px`;
       player.style.top = `${posY}px`;
+
+      // Idle bobbing effect
+      if (!isMoving) {
+        bobbingTime += 0.05;
+        const bobOffset = Math.sin(bobbingTime) * 5;
+        player.style.transform = `translate(-50%, -50%) translateY(${bobOffset}px)`;
+      } else {
+        // Reset transform when moving
+        player.style.transform = 'translate(-50%, -50%)';
+        bobbingTime = 0; // Optional: reset bobbing phase
+      }
 
       requestAnimationFrame(movePlayer);
     }
@@ -81,4 +97,3 @@
   </script>
 </body>
 </html>
-
