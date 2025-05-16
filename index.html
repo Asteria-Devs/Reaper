@@ -74,18 +74,13 @@
       // Keep player within bounds
       posX = Math.max(0, Math.min(window.innerWidth - 50, posX));
       posY = Math.max(0, Math.min(window.innerHeight - 50, posY));
-
-      // Set base position
       player.style.left = `${posX}px`;
       player.style.top = `${posY}px`;
-
-      // Idle bobbing effect
       if (!isMoving) {
         bobbingTime += 0.05;
         const bobOffset = Math.sin(bobbingTime) * 5;
         player.style.transform = `translate(-50%, -50%) translateY(${bobOffset}px)`;
       } else {
-        // Reset transform when moving
         player.style.transform = 'translate(-50%, -50%)';
         bobbingTime = 0; // Optional: reset bobbing phase
       }
